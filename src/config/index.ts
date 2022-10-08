@@ -2,6 +2,7 @@
 require('dotenv').config();
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs';
+import { TSMigrationGenerator } from '@mikro-orm/migrations';
 
 class ConfigService {
   constructor(private env: { [k: string]: string | undefined }) {}
@@ -31,6 +32,15 @@ class ConfigService {
       user: this.getValue('POSTGRES_USER', true),
       password: this.getValue('POSTGRES_PASSWORD', true),
       type: 'postgresql',
+      migrations: {
+        tableName: 'mikro_orm_migrations',
+        path: './dist/migrations',
+        pathTs: './src/migrations',
+        glob: '!(*.d).{js,ts}',
+        transactional: true,
+        emit: 'ts',
+        generator: TSMigrationGenerator,
+      },
     };
   }
 }
