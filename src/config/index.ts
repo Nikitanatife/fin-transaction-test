@@ -33,6 +33,7 @@ class ConfigService {
       user: this.getValue('POSTGRES_USER', true),
       password: this.getValue('POSTGRES_PASSWORD', true),
       type: 'postgresql',
+      autoLoadEntities: true,
       migrations: {
         tableName: 'mikro_orm_migrations',
         path: './dist/migrations',

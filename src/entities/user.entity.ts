@@ -1,16 +1,14 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, Property } from '@mikro-orm/core';
+import { BaseEntity } from './base.entity';
 
 @Entity()
-export class User {
-  @PrimaryKey()
-  id: number;
-
+export class User extends BaseEntity {
   @Property()
   email: string;
 
   @Property()
   password: string;
 
-  @Property()
+  @Property({ nullable: true })
   token: string;
 }
