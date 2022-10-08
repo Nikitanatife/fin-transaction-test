@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { configService } from './config';
 
 @Module({
-  imports: [ConfigModule.forRoot()],
+  imports: [MikroOrmModule.forRoot(configService.getMicroORMConfig())],
   controllers: [],
   providers: [],
 })

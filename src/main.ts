@@ -1,11 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ConfigService } from '@nestjs/config';
-
+import { configService } from './config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const configService = app.get(ConfigService);
-  const port = configService.get('PORT');
+  const port = configService.getPort();
   await app.listen(port, () =>
     console.log(`Server started at http://localhost:${port}`),
   );
