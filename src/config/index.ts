@@ -1,8 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config();
+import * as dotenv from 'dotenv';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs';
 import { TSMigrationGenerator } from '@mikro-orm/migrations';
+
+dotenv.config();
 
 class ConfigService {
   constructor(private env: { [k: string]: string | undefined }) {}
