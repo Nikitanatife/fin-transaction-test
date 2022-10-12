@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { configService } from './config';
-import { FinancialTransactionController } from './controllers';
-import { FinancialTransactionService } from './services';
+import {
+  FinancialTransactionController,
+  FinancialTransactionModule,
+  FinancialTransactionService,
+  FinancialTransactionRepository,
+} from './financial-transaction';
 
 @Module({
-  imports: [MikroOrmModule.forRoot(configService.getMicroORMConfig())],
+  imports: [MikroOrmModule.forRoot(), FinancialTransactionModule],
   controllers: [FinancialTransactionController],
-  providers: [FinancialTransactionService],
+  providers: [FinancialTransactionService, FinancialTransactionRepository],
 })
 export class AppModule {}

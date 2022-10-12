@@ -7,7 +7,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as path from 'path';
 import { diskStorage } from 'multer';
-import { FinancialTransactionService } from '../services';
+import { FinancialTransactionService } from './financial-transaction.service';
 
 @Controller('/transactions')
 @UseInterceptors(

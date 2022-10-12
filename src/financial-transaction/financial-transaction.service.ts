@@ -1,15 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs/promises';
 import { parse, ParseResult } from 'papaparse';
-import { InjectRepository } from '@mikro-orm/nestjs';
-import { FinancialTransactionEntity } from '../entities/financial-transaction.entity';
-import { EntityRepository } from '@mikro-orm/postgresql';
+import { FinancialTransactionRepository } from './financial-transaction.repository';
 
 @Injectable()
 export class FinancialTransactionService {
   constructor(
-    @InjectRepository(FinancialTransactionEntity)
-    private readonly _transactionRepository: EntityRepository<FinancialTransactionEntity>,
+    private readonly _financialTransactionRepository: FinancialTransactionRepository,
   ) {}
   async upload(path: string) {
     const file = await fs.readFile(path);
@@ -22,7 +19,12 @@ export class FinancialTransactionService {
       complete: (results: ParseResult<unknown>) => results.data,
     });
 
-    console.log(parsedCSV);
-    await this._transactionRepository.create(parsedCSV);
+    console.log(parsedCSV.data);
+    await this._financialTransactionRepository.create({
+      date: new Date('01-05-2022'),
+      sum: 1500,
+      source: 'other',
+      description: '',
+    });
   }
 }
