@@ -1,6 +1,6 @@
 import { Entity, Enum, Property } from '@mikro-orm/core';
-import { TranscationSource } from '../constants';
-import { BaseEntity } from './base.entity';
+import { TransactionSource } from '../../constants';
+import { BaseEntity } from '../../entities/base.entity';
 
 @Entity({
   tableName: 'transaction',
@@ -13,7 +13,7 @@ export class FinancialTransactionEntity extends BaseEntity {
   sum: number;
 
   @Property()
-  @Enum(() => TranscationSource)
+  @Enum(() => TransactionSource)
   source: string;
 
   @Property({ nullable: true })

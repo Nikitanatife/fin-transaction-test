@@ -27,13 +27,12 @@ class ConfigService {
 
   getMicroORMConfig(): MikroOrmModuleSyncOptions {
     return {
-      entities: ['./dist/entities/*.entity.js'],
-      entitiesTs: ['./src/entities/*.entity.ts'],
+      entities: ['./dist/modules/*/*.entity.js'],
+      entitiesTs: ['./src/modules/*/*.entity.ts'],
       dbName: this.getValue('POSTGRES_DB', true),
       user: this.getValue('POSTGRES_USER', true),
       password: this.getValue('POSTGRES_PASSWORD', true),
       type: 'postgresql',
-      // autoLoadEntities: true,
       migrations: {
         tableName: 'mikro_orm_migrations',
         path: './dist/migrations',

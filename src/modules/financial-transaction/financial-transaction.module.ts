@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { FinancialTransactionController } from './financial-transaction.controller';
 import { FinancialTransactionService } from './financial-transaction.service';
-import { FinancialTransactionRepository } from './financial-transaction.repository';
-import { FinancialTransactionEntity } from '../entities';
+import { FinancialTransactionEntity } from './financial-transaction.entity';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 
 @Module({
@@ -10,6 +9,6 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
     MikroOrmModule.forFeature({ entities: [FinancialTransactionEntity] }),
   ],
   controllers: [FinancialTransactionController],
-  providers: [FinancialTransactionService, FinancialTransactionRepository],
+  providers: [FinancialTransactionService],
 })
 export class FinancialTransactionModule {}

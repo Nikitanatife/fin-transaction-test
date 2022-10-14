@@ -1,15 +1,16 @@
-import { Entity, PrimaryKey, Property, types } from '@mikro-orm/core';
+import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
 @Entity({ abstract: true })
 export class BaseEntity {
   @PrimaryKey()
   id: number;
 
-  @Property({ type: types.datetime, default: 'now()' })
+  @Property({ type: Date, columnType: 'timestamp', default: 'now()' })
   createdAt: Date = new Date();
 
   @Property({
-    type: types.datetime,
+    type: Date,
+    columnType: 'timestamp',
     onUpdate: () => new Date(),
     default: 'now()',
   })

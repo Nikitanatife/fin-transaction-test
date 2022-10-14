@@ -1,5 +1,6 @@
 import {
   Controller,
+  HttpCode,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -29,7 +30,8 @@ export class FinancialTransactionController {
     private readonly _financialTransactionService: FinancialTransactionService,
   ) {}
   @Post('/upload')
+  @HttpCode(201)
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    await this._financialTransactionService.upload(file.path);
+    return await this._financialTransactionService.upload(file.path);
   }
 }

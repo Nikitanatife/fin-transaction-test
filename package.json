@@ -19,10 +19,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "migration:create": "npx mikro-orm migration:create",
-    "up": "npx mikro-orm migration:up",
-    "down": "npx mikro-orm migration:down",
-    "migration;list": "npx mikro-orm migration:list "
+    "m:create": "npx mikro-orm migration:create",
+    "m:up": "npx mikro-orm migration:up",
+    "m:down": "npx mikro-orm migration:down",
+    "m:list": "npx mikro-orm migration:list "
   },
   "dependencies": {
     "@mikro-orm/cli": "^5.4.2",
@@ -33,6 +33,8 @@
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.13.2",
     "dotenv": "^16.0.3",
     "papaparse": "^5.3.2",
     "reflect-metadata": "^0.1.13",
