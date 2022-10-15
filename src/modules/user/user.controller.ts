@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -11,6 +13,7 @@ import { UserService } from './user.service';
 import { RegisterDto, LoginDto } from './dto';
 import { UserEntity } from './user.entity';
 import { configService } from '../../config';
+import { AuthDto, AuthGuard, User } from '../auth';
 
 @Controller('users')
 export class UserController {
@@ -28,5 +31,12 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   async login(@Body() body: LoginDto): Promise<UserEntity> {
     return this._userService.login(body);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/logout')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async logout(@User() user: AuthDto): Promise<void> {
+    return this._userService.logout(user.userId);
   }
 }
