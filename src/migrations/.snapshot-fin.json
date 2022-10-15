@@ -17,35 +17,34 @@
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamptz(0)",
+          "type": "timestamp",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
           "length": 6,
-          "default": "'CURRENT_TIMESTAMP'",
+          "default": "'now()'",
           "mappedType": "datetime"
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "timestamptz(0)",
+          "type": "timestamp",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
           "length": 6,
-          "default": "'CURRENT_TIMESTAMP'",
+          "default": "'now()'",
           "mappedType": "datetime"
         },
         "date": {
           "name": "date",
-          "type": "timestamptz(0)",
+          "type": "date",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
+          "mappedType": "date"
         },
         "sum": {
           "name": "sum",
@@ -104,24 +103,24 @@
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamptz(0)",
+          "type": "timestamp",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
           "length": 6,
-          "default": "'CURRENT_TIMESTAMP'",
+          "default": "'now()'",
           "mappedType": "datetime"
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "timestamptz(0)",
+          "type": "timestamp",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
           "length": 6,
-          "default": "'CURRENT_TIMESTAMP'",
+          "default": "'now()'",
           "mappedType": "datetime"
         },
         "email": {
@@ -135,6 +134,24 @@
         },
         "password": {
           "name": "password",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "first_name": {
+          "name": "first_name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "last_name": {
+          "name": "last_name",
           "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,

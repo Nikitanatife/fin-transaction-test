@@ -1,12 +1,12 @@
 import { Entity, Enum, Property } from '@mikro-orm/core';
-import { TransactionSource } from '../../constants';
+import { TransactionSource } from './constants';
 import { BaseEntity } from '../../entities/base.entity';
 
 @Entity({
   tableName: 'transaction',
 })
 export class FinancialTransactionEntity extends BaseEntity {
-  @Property()
+  @Property({ columnType: 'date' })
   date: Date;
 
   @Property()
