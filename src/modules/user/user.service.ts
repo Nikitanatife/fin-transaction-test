@@ -1,21 +1,26 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { RegisterDto } from './dto';
+import { RegisterDto, LoginDto } from './dto';
 import { UserEntity } from './user.entity';
 import { genSalt, hash, compare } from 'bcryptjs';
-// import { JwtService } from '@nestjs/jwt';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
-import { EMAIL_EXIST } from './constants';
+import { EMAIL_EXIST, NOT_VALID_CREDENTIALS } from './constants';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly _userRepository: EntityRepository<UserEntity>,
+    private readonly _jwtService: JwtService,
   ) {}
 
-  async register(body: RegisterDto): Promise<UserEntity> {
-    const { password, lastName, firstName, email } = body;
+  async register({
+    password,
+    lastName,
+    firstName,
+    email,
+  }: RegisterDto): Promise<UserEntity> {
     const user = await this._userRepository.findOne({ email });
 
     if (user) {
@@ -35,5 +40,32 @@ export class UserService {
     await this._userRepository.persistAndFlush(newUser);
 
     return { ...newUser, password: '' };
+  }
+
+  async login({ password, email }: LoginDto): Promise<UserEntity> {
+    const user = await this._userRepository.findOne({ email });
+
+    if (!user) {
+      throw new HttpException(
+        { error: NOT_VALID_CREDENTIALS },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const isPasswordMatch = await compare(password, user.password);
+
+    if (!isPasswordMatch) {
+      throw new HttpException(
+        { error: NOT_VALID_CREDENTIALS },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const token = this._jwtService.sign({ userId: user.id });
+
+    await this._userRepository.assign(user, { token });
+    await this._userRepository.persistAndFlush(user);
+
+    return { ...user, password: '' };
   }
 }
