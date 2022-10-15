@@ -1,5 +1,9 @@
 import * as dotenv from 'dotenv';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  ValidationPipeOptions,
+} from '@nestjs/common';
 import { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs';
 import { TSMigrationGenerator } from '@mikro-orm/migrations';
 
@@ -25,6 +29,14 @@ class ConfigService {
     return +this.getValue('PORT', true);
   }
 
+  getJwtSecret(): string {
+    return this.getValue('JWT_SECRET', true);
+  }
+
+  getJwtExpiration(): string {
+    return this.getValue('JWT_EXP', true);
+  }
+
   getMicroORMConfig(): MikroOrmModuleSyncOptions {
     return {
       entities: ['./dist/modules/*/*.entity.js'],
@@ -43,6 +55,28 @@ class ConfigService {
         generator: TSMigrationGenerator,
       },
     };
+  }
+
+  getValidationOptions(transform?: true): ValidationPipeOptions {
+    const options: ValidationPipeOptions = {
+      whitelist: true,
+      validateCustomDecorators: true,
+    };
+
+    if (transform) {
+      return {
+        ...options,
+        stopAtFirstError: false,
+        transform: true,
+        forbidNonWhitelisted: false,
+        transformOptions: {
+          enableImplicitConversion: true,
+          exposeDefaultValues: true,
+        },
+      };
+    }
+
+    return options;
   }
 }
 
