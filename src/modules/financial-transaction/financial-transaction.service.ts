@@ -11,7 +11,7 @@ export class FinancialTransactionService {
     @InjectRepository(FinancialTransactionEntity)
     private readonly _transactionRepository: EntityRepository<FinancialTransactionEntity>,
   ) {}
-  async upload(path: string) {
+  async upload(userId: number, path: string) {
     const file = await fs.readFile(path);
     const csvData = file.toString();
     const parsedCSV = await parse(csvData, {
@@ -30,6 +30,7 @@ export class FinancialTransactionService {
           sum,
           description,
           date: new Date(`${Number(month) + 1}/${day}/${year}`),
+          user: userId,
         });
       }),
     );

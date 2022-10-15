@@ -1,6 +1,7 @@
-import { Entity, Enum, Property } from '@mikro-orm/core';
+import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core';
 import { TransactionSource } from './constants';
 import { BaseEntity } from '../../entities/base.entity';
+import { UserEntity } from '../user';
 
 @Entity({
   tableName: 'transaction',
@@ -18,4 +19,7 @@ export class FinancialTransactionEntity extends BaseEntity {
 
   @Property({ nullable: true })
   description: string;
+
+  @ManyToOne()
+  user: UserEntity;
 }

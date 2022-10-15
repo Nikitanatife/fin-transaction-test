@@ -3,12 +3,14 @@ import {
   HttpCode,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as path from 'path';
 import { diskStorage } from 'multer';
 import { FinancialTransactionService } from './financial-transaction.service';
+import { AuthDto, AuthGuard, User } from '../auth';
 
 @Controller('/transactions')
 @UseInterceptors(
@@ -29,9 +31,16 @@ export class FinancialTransactionController {
   constructor(
     private readonly _financialTransactionService: FinancialTransactionService,
   ) {}
+  @UseGuards(AuthGuard)
   @Post('/upload')
   @HttpCode(201)
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    return await this._financialTransactionService.upload(file.path);
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    @User() user: AuthDto,
+  ) {
+    return await this._financialTransactionService.upload(
+      user.userId,
+      file.path,
+    );
   }
 }
