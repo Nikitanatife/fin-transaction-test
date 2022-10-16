@@ -14,10 +14,11 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import * as path from 'path';
 import { diskStorage } from 'multer';
 import { FinancialTransactionService } from './financial-transaction.service';
-import { AuthDto, AuthGuard, User } from '../auth';
+import { AuthGuard, User } from '../auth';
 import { ReportInterface } from './interfaces';
 import { ReportParamsDto } from './dto';
 import { configService } from '../../config';
+import { UserEntity } from '../user';
 
 @Controller('/transactions')
 @UseInterceptors(
@@ -43,24 +44,18 @@ export class FinancialTransactionController {
   @HttpCode(201)
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
-    @User() user: AuthDto,
+    @User() user: UserEntity,
   ) {
-    return await this._financialTransactionService.upload(
-      user.userId,
-      file.path,
-    );
+    return await this._financialTransactionService.upload(user, file.path);
   }
 
+  @UsePipes(new ValidationPipe(configService.getValidationOptions()))
   @UseGuards(AuthGuard)
   @Get('/reports')
-  @UsePipes(new ValidationPipe(configService.getValidationOptions()))
   async getReport(
-    @User() user: AuthDto,
+    @User() user: UserEntity,
     @Query() query: ReportParamsDto,
   ): Promise<ReportInterface[]> {
-    return this._financialTransactionService.getReport(
-      user.userId,
-      query.byMonth,
-    );
+    return this._financialTransactionService.getReport(user, query.byMonth);
   }
 }

@@ -5,12 +5,7 @@ import { genSalt, hash, compare } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
-import {
-  ALREADY_LOGGED_OUT,
-  EMAIL_EXIST,
-  NOT_VALID_CREDENTIALS,
-  USER_NOT_FOUND,
-} from './constants';
+import { EMAIL_EXIST, NOT_VALID_CREDENTIALS } from './constants';
 
 @Injectable()
 export class UserService {
@@ -74,23 +69,7 @@ export class UserService {
     return { ...user, password: '' };
   }
 
-  async logout(id: number): Promise<void> {
-    const user = await this._userRepository.findOne({ id });
-
-    if (!user) {
-      throw new HttpException(
-        { error: USER_NOT_FOUND },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    if (!user.token) {
-      throw new HttpException(
-        { error: ALREADY_LOGGED_OUT },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
+  async logout(user: UserEntity): Promise<void> {
     await this._userRepository.assign(user, { token: null });
     await this._userRepository.persistAndFlush(user);
   }

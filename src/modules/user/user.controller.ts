@@ -13,7 +13,7 @@ import { UserService } from './user.service';
 import { RegisterDto, LoginDto } from './dto';
 import { UserEntity } from './user.entity';
 import { configService } from '../../config';
-import { AuthDto, AuthGuard, User } from '../auth';
+import { AuthGuard, User } from '../auth';
 
 @Controller('users')
 export class UserController {
@@ -36,7 +36,7 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Get('/logout')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async logout(@User() user: AuthDto): Promise<void> {
-    return this._userService.logout(user.userId);
+  async logout(@User() user: UserEntity): Promise<void> {
+    return this._userService.logout(user);
   }
 }

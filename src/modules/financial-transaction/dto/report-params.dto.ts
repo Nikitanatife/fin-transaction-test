@@ -4,6 +4,6 @@ import { IsBoolean, IsOptional } from 'class-validator';
 export class ReportParamsDto {
   @IsOptional()
   @IsBoolean()
-  @Transform(({ value }) => value === 'true')
+  @Transform(({ value }) => value === 'true' || value === true)
   byMonth: boolean;
 }

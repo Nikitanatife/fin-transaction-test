@@ -61,7 +61,6 @@ class ConfigService {
   getValidationOptions(transform?: true): ValidationPipeOptions {
     const options: ValidationPipeOptions = {
       whitelist: true,
-      validateCustomDecorators: true,
     };
 
     if (transform) {

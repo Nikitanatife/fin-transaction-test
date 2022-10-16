@@ -8,6 +8,7 @@ import {
 } from './financial-transaction.entity';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { ReportDataInterface, ReportInterface } from './interfaces';
+import { UserEntity } from '../user';
 
 @Injectable()
 export class FinancialTransactionService {
@@ -15,7 +16,7 @@ export class FinancialTransactionService {
     @InjectRepository(FinancialTransactionEntity)
     private readonly _transactionRepository: EntityRepository<FinancialTransactionEntity>,
   ) {}
-  async upload(userId: number, path: string) {
+  async upload(user: UserEntity, path: string) {
     const file = await fs.readFile(path);
     const csvData = file.toString();
     const parsedCSV = await parse(csvData, {
@@ -34,7 +35,7 @@ export class FinancialTransactionService {
           sum,
           description,
           date: new Date(`${Number(month) + 1}/${day}/${year}`),
-          user: userId,
+          user: user.id,
         });
       }),
     );
@@ -44,15 +45,13 @@ export class FinancialTransactionService {
     return finTransactions;
   }
 
-  async getReport(userId: number, byMonth = false) {
-    console.log(byMonth);
-
+  async getReport(user: UserEntity, byMonth = false) {
     let reportsData: ReportDataInterface[] = [];
 
     if (byMonth) {
-      reportsData = await this.buildReport(userId);
+      reportsData = await this.buildReport(user.id);
     } else {
-      reportsData = await this.buildReportByMonth(userId);
+      reportsData = await this.buildReportByMonth(user.id);
     }
 
     const reports: ReportInterface[] = Object.values(TransactionSource).map(
