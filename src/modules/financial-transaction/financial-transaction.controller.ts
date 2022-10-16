@@ -3,9 +3,12 @@ import {
   Get,
   HttpCode,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as path from 'path';
@@ -13,6 +16,8 @@ import { diskStorage } from 'multer';
 import { FinancialTransactionService } from './financial-transaction.service';
 import { AuthDto, AuthGuard, User } from '../auth';
 import { ReportInterface } from './interfaces';
+import { ReportParamsDto } from './dto';
+import { configService } from '../../config';
 
 @Controller('/transactions')
 @UseInterceptors(
@@ -48,7 +53,14 @@ export class FinancialTransactionController {
 
   @UseGuards(AuthGuard)
   @Get('/reports')
-  async getReport(@User() user: AuthDto): Promise<ReportInterface[]> {
-    return this._financialTransactionService.getReport(user.userId);
+  @UsePipes(new ValidationPipe(configService.getValidationOptions()))
+  async getReport(
+    @User() user: AuthDto,
+    @Query() query: ReportParamsDto,
+  ): Promise<ReportInterface[]> {
+    return this._financialTransactionService.getReport(
+      user.userId,
+      query.byMonth,
+    );
   }
 }

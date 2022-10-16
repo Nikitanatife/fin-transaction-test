@@ -44,8 +44,35 @@ export class FinancialTransactionService {
     return finTransactions;
   }
 
-  async getReport(userId?: number) {
-    const reportsData: ReportDataInterface[] = await this._transactionRepository
+  async getReport(userId: number, byMonth = false) {
+    console.log(byMonth);
+
+    let reportsData: ReportDataInterface[] = [];
+
+    if (byMonth) {
+      reportsData = await this.buildReport(userId);
+    } else {
+      reportsData = await this.buildReportByMonth(userId);
+    }
+
+    const reports: ReportInterface[] = Object.values(TransactionSource).map(
+      (sourceType) => ({
+        source: sourceType,
+        data: reportsData
+          .map(({ source, total, month, year, date }) =>
+            source === sourceType
+              ? { total, date: byMonth ? `${month} ${year}` : date }
+              : null,
+          )
+          .filter((report) => report),
+      }),
+    );
+
+    return reports;
+  }
+
+  private async buildReport(userId): Promise<ReportDataInterface[]> {
+    return this._transactionRepository
       .createQueryBuilder('t')
       .select([
         't.source',
@@ -60,18 +87,14 @@ export class FinancialTransactionService {
         `date_trunc('month', t."date")`,
       ])
       .execute();
+  }
 
-    const reports: ReportInterface[] = Object.values(TransactionSource).map(
-      (sourceType) => ({
-        source: sourceType,
-        data: reportsData
-          .map(({ source, total, month, year }) =>
-            source === sourceType ? { total, date: `${month} ${year}` } : null,
-          )
-          .filter((report) => report),
-      }),
-    );
-
-    return reports;
+  private async buildReportByMonth(userId): Promise<ReportDataInterface[]> {
+    return this._transactionRepository
+      .createQueryBuilder('t')
+      .select(['t.source', 't."date"', 'sum(t.sum) as total'])
+      .where({ user: userId })
+      .groupBy(['t."source"', 't."date"'])
+      .execute();
   }
 }
