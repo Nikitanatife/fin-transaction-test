@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   HttpCode,
   Post,
   UploadedFile,
@@ -11,6 +12,7 @@ import * as path from 'path';
 import { diskStorage } from 'multer';
 import { FinancialTransactionService } from './financial-transaction.service';
 import { AuthDto, AuthGuard, User } from '../auth';
+import { ReportInterface } from './interfaces';
 
 @Controller('/transactions')
 @UseInterceptors(
@@ -42,5 +44,11 @@ export class FinancialTransactionController {
       user.userId,
       file.path,
     );
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/reports')
+  async getReport(@User() user: AuthDto): Promise<ReportInterface[]> {
+    return this._financialTransactionService.getReport(user.userId);
   }
 }
